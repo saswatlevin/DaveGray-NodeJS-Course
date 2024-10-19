@@ -1,0 +1,21 @@
+=========================17-10-2024=========================
+The "npm init" command generates the package.json file by asking you a series of questions.
+The package.json file exists so that the node_modules folder doesn't have to be downloaded.
+When installing a node.js app, the required dependencies can be downloaded and installed.
+There are 2 kinds of dependencies in the package.json file -> Dev Dependencies and Production Dependencies.
+
+Dev Dependencies are those packages that're used for development only. They're listed as "devDependencies" in package.json.
+Production Dependencies are those packages that're necessary for the app to run. They're listed as "dependencies" in package.json.
+
+When installing a package as a dev dependency, we use "npm install <package_name> -D".
+When installing a package as a production dependency, we use "npm install <package_name>".
+When removing a dev dependency, we use "npm uninstall <package_name> -D".
+When removing a production dependency, we use "npm uninstall <package_name>".
+
+A package version number "a.b.c" has 3 parts: "a" is the Major Version, "b" is the Minor Version and "c" is the Patch Version.
+A package version number prefixed by "^" allows new minor versions / new patches to be installed.
+A package version number prefixed by "~" allows new patches to be installed.
+A package version number indicated by "*", allows the latest version to be installed.
+
+A particular package version can be installed using "npm install <package_name>@<version>". 
+=========================17-10-2024=========================
