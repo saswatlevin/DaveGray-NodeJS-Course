@@ -3,25 +3,25 @@ const path = require('path');
 const fs = require('fs');
 const fsPromises = require('fs').promises;
 const logEvents = require('./logEvents.js');
-//const EventEmitter = require('events');
+const EventEmitter = require('events');
 
 
-//class MyEmitter extends EventEmitter {};
+class MyEmitter extends EventEmitter {};
 
 // Initialize object
-//const myEmitter = new MyEmitter();
+const myEmitter = new MyEmitter();
 
 // Add listener for the log event
 // Here, we first specify the event type('log') thet we're listening for
 // followed by an anon fn to pass the message to the logEvents fn
-//myEmitter.on('log', (msg) => logEvents(msg));
+myEmitter.on('log', (msg) => logEvents(msg));
 
 // Here, we create the emitter function
 // and set a delay of 2000 ms
-/*setTimeout(() => {
+setTimeout(() => {
     // Emit event
     myEmitter.emit('log', 'Log event emitted');
-}, 2000);*/
+}, 2000);
 
 // Server Code
 const PORT = process.env.PORT || 3500;
@@ -71,7 +71,11 @@ const serveFile = async (filePath, contentType, response) => {
         const data = contentType === 'application/json' ? JSON.parse(rawData) : rawData;
 
         // Send a response header to the incoming request
-        response.writeHead(200, {'Content-Type': contentType});
+        response.writeHead(
+            // To send status as 404 when such a request is processed from here.
+            filePath.includes("404.html") ? 404 : 200, 
+            {'Content-Type': contentType}
+        );
         
         // End the response by sending data
         response.end(
