@@ -4,6 +4,7 @@ const path = require("path");
 //const { logger } = require('./middleware/logEvents');
 const cors = require("cors");
 //const errorHandler = require("./middleware/errorHandler");
+const corsOptions = require("./config/corsOptions");
 const PORT = process.env.PORT || 3500;
 
 //Express.js works like a waterfall. It first goes to a route '/', then to the route with '/index.html' and so on
@@ -33,18 +34,6 @@ const PORT = process.env.PORT || 3500;
 // It is a mechanism that allows servers to load resources from other origins' backends.
 // Here, unless we add a site to this whitelist, we can't access our backedn (server) from that site.
 
-const whiteList = ['https://www.yoursite.com', 'http://127.0.0.1:5500', 'http://localhost:3500'];
-const corsOptions = {
-    origin: (origin, callback) => {
-        // !origin is added so that it doesn't block requests made from our own machine
-        if (whiteList.indexOf(origin) !== -1 || !origin) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not Allowed by CORS'));
-        }
-    },
-    optionSuccessStatus: 200
-}
 
 // CORS (Cross Origin Resource Sharing) headers enabled
 app.use(cors(corsOptions));
@@ -94,5 +83,3 @@ app.all('*', (req, res) => {
 //app.use(errorHandler);
 
 app.listen(PORT, () => console.log("Server running on port", PORT));
-
-
