@@ -37,7 +37,7 @@ const whiteList = ['https://www.yoursite.com', 'http://127.0.0.1:5500', 'http://
 const corsOptions = {
     origin: (origin, callback) => {
         // !origin is added so that it doesn't block requests made from our own machine
-        if (whiteList.indexOf(origin) !== -1) {
+        if (whiteList.indexOf(origin) !== -1 || !origin) {
             callback(null, true);
         } else {
             callback(new Error('Not Allowed by CORS'));
@@ -55,35 +55,29 @@ app.use(express.urlencoded({extended: false}));
 // Built-in middleware for JSON
 app.use(express.json());
 
-// Serve static files
-app.use(express.static(path.join(__dirname, '/public')));
+// Serve static files for all requests to the root directory.
+app.use('/', express.static(path.join(__dirname, '/public')));
+// Serve static files for all requests to the subdir directory.
+app.use('/subdir', express.static(path.join(__dirname, '/public')));
 
-// This will allow us to route to 'index', '/index' and '/index/' with or without the '.html'
-app.get('^/$|/index(.html)?', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'index.html'));
-});
-
-// Route to /new-page or /new-page.html
-app.get('/new-page(.html)?', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'new-page.html'));
-});
-
-// Does a permanent redirect to 'new-page.html'
-// If the 301 wasn't specified, by default, a search engine would do a temporary redirect (302) 
-app.get('/old-page(.html)?', (req, res) => {
-    res.redirect(301, 'new-page.html');
-});
+// Provide a route to the root directory
+app.use('/', require('./routes/root'));
+// Provide a route to the subdirectory.
+app.use('/subdir', require('./routes/subdir'));
+// Employees API Route
+// This route won't need to serve any static files from the public folder
+app.use('/employees', require('./routes/api/employees'));
 
 // The next() function directs the flow of control to the next route
 // Here, after trying to load old-page.html, the next arrow fn inside it would be executed.
 // If that arrow fn wasn't there, then, we would be directed to the 404.html page due to the last route.
-app.get('/hello(.html)?', (req, res, next) => {
+/** app.get('/hello(.html)?', (req, res, next) => {
     console.log('Attempted to load hello.html');
     next();
 
 }, (req, res) => {
     res.send('Hello World');
-});
+}); **/
 
 // Redirects any url other than 'index', 'new-page' or 'old-page' to the 404.html page with status code 404.
 app.all('*', (req, res) => {
