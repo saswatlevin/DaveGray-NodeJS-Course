@@ -97,7 +97,7 @@ app.all('*', (req, res) => {
     }
 });
 
-app.use(errorHandler);
+//app.use(errorHandler);
 
 app.listen(PORT, () => console.log("Server running on port", PORT));
 
