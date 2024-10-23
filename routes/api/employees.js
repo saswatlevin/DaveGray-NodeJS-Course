@@ -5,7 +5,8 @@ const employeesController = require('../../controllers/employeesController');
 
 
 // The get(), post(), put() and delete() methods are chained.
-// They all belong to the same route
+// They all belong to the same route.
+// These methods can also be defined separately without chaining.
 router.route('/')
     .get(employeesController.getAllEmployees)
     .post(employeesController.createNewEmployee)

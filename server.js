@@ -23,6 +23,10 @@ const PORT = process.env.PORT || 3500;
 // Middleware also works like a waterfall. So, if we apply any middleware in a line that's above
 // all routes, so that middleware will apply to all routes.
 
+// Middleware is a list of actions that flows through one after another.
+// The .use() function allows layers to be added to middleware.
+
+
 /** MIDDLEWARE */
 
 // Custom middleware logger
