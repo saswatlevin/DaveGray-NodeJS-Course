@@ -24,7 +24,10 @@ const createNewEmployee = (req, res) => {
 };
 
 const updateEmployee = (req, res) => {
+    console.log("req.body.id in updateEmployee", req.body.id);
     const employee = data.employees.find(emp => emp.id == parseInt(req.body.id));
+    console.log("employee in updateEmployee", employee);
+    
     if (!employee) {
         return res.status(400).json({ "message": `Employee ID ${req.body.id} not found` });
     }
@@ -42,17 +45,25 @@ const updateEmployee = (req, res) => {
 };
 
 const deleteEmployee = (req, res) => {
+    console.log("req.body.id in deleteEmployee", req.body.id);
     const employee = data.employees.find(emp => emp.id == parseInt(req.body.id));
+    console.log("employee in deleteEmployee", employee);
+    
     if (!employee) {
         return res.status(400).json({ "message": `Employee ID ${req.body.id} not found` });
     }
+    
     const filteredArray = data.employees.filter(emp => emp.id !== parseInt(req.body.id));
     data.setEmployees([...filteredArray]);
     res.json(data.employees);
 };
 
 const getSingleEmployee = (req, res) => {
-    const employee = data.employees.find(emp => emp.id == parseInt(req.body.id));
+    const { id } = req.params;
+    console.log("id in getSingleEmployee", id);
+    const employee = data.employees.find(emp => emp.id == parseInt(id));
+    console.log("employee in getSingleEmployee", employee);
+    
     if (!employee) {
         return res.status(400).json({ "message": `Employee ID ${req.body.id} not found` });
     }
