@@ -5,6 +5,7 @@ const path = require("path");
 const cors = require("cors");
 //const errorHandler = require("./middleware/errorHandler");
 const corsOptions = require("./config/corsOptions");
+const verifyJWT = require("./middleware/verifyJWT");
 const PORT = process.env.PORT || 3500;
 
 //Express.js works like a waterfall. It first goes to a route '/', then to the route with '/index.html' and so on
@@ -57,9 +58,22 @@ app.use('/subdir', express.static(path.join(__dirname, '/public')));
 app.use('/', require('./routes/root'));
 // Provide a route to the subdirectory.
 app.use('/subdir', require('./routes/subdir'));
+
+// Provide a route to register users
+app.use('/register', require('./routes/register'));
+// Provide a route to log new users in
+app.use('/auth', require('./routes/auth'));
+// Provide a route to generate a new access token
+app.use('/refresh', require('./routes/refresh'));
+// Provide a route to log the user out (delete the refresh token)
+app.use('/logout', require('./routes/logout'));
+
+// Protect the Employees API using JWT
+//app.use(verifyJWT);
 // Employees API Route
 // This route won't need to serve any static files from the public folder
 app.use('/employees', require('./routes/api/employees'));
+
 
 // The next() function directs the flow of control to the next route
 // Here, after trying to load old-page.html, the next arrow fn inside it would be executed.
