@@ -1,0 +1,119 @@
+=========================17-10-2024=========================
+The "npm init" command generates the package.json file by asking you a series of questions.
+The package.json file exists so that the node_modules folder doesn't have to be downloaded.
+When installing a node.js app, the required dependencies can be downloaded and installed.
+There are 2 kinds of dependencies in the package.json file -> Dev Dependencies and Production Dependencies.
+
+Dev Dependencies are those packages that're used for development only. They're listed as "devDependencies" in package.json.
+Production Dependencies are those packages that're necessary for the app to run. They're listed as "dependencies" in package.json.
+
+When installing a package as a dev dependency, we use "npm install <package_name> -D".
+When installing a package as a production dependency, we use "npm install <package_name>".
+When removing a dev dependency, we use "npm uninstall <package_name> -D".
+When removing a production dependency, we use "npm uninstall <package_name>".
+
+A package version number "a.b.c" has 3 parts: "a" is the Major Version, "b" is the Minor Version and "c" is the Patch Version.
+A package version number prefixed by "^" allows new minor versions / new patches to be installed.
+A package version number prefixed by "~" allows new patches to be installed.
+A package version number indicated by "*", allows the latest version to be installed.
+
+A particular package version can be installed using "npm install <package_name>@<version>". 
+=========================17-10-2024=========================
+
+=========================24-10-2024=========================
+10 AUTHORIZATION:
+    F_I_L_E_S C_R_E_A_T_E_D
+    	/controllers/registerController
+        /model/users.json
+        /routes/register.js
+
+    We need to install the "bcrypt" package.
+    In order to enable authorization, user registration is needed.
+    A "users.json" model is created to simulate the storage of users.
+    A controller, "registerController.js" is created which registers users.
+    A route handler, "register.js" is created which handles user registration requests.
+    The said route handler registers users using the logic in "registerController.js".
+    The route is added to the server by using the "app.use()" fn. 
+    
+    User login is created. This is where the Authorization will take place.
+    A controller, "authController.js" is created which logs users in.
+    A route handler, "auth.js" is created which handles user login requests.
+    The said route handler logs the user in using the logic in "authController.js".
+    The route is added to the server by using the "app.use()" fn. 
+    
+    NOTE: First, create a controller, then create a route, then add that route to "server.js" using app.use().    
+
+11 JWT AUTH
+    F_I_L_E_S C_R_E_A_T_E_D
+    	/controllers/authController.js
+        /controllers/refreshTokenController.js
+        /middleware/verifyJWT.js
+        /routes/auth.js
+        /routes/logout.js
+        /routes/refresh.js
+        /routes/register.js
+    
+    JWT -> JSON Web Tokens
+    Used to protect certain routes against CSRF and XSS attacks.
+    Issued to a user after successful login.
+    
+    Two tokens are issues -> Access Token (Short Time) and Refresh Token (Long Time).
+    Access Tokens are sent as JSON and stored only in memory to prevent access.
+    The Refresh Token is sent as an HTTP-Only Cookie and can't be accessed using jS.
+    
+    Both Access and Refresh Tokens must have an expiry time.
+    Refresh Tokens shouldn't be allowed to issue other Refresh Tokens.
+    Access and Refresh Tokens are issued at authorization.
+    
+    An Access Token is used for API Access till it expires.
+    Access Tokens are verified using Middleware.
+    A new Access Token is issued at Refresh request.
+    
+    A Refresh Token is used by the client to access a new Access Token.
+    It is verifed by endpoint and database
+    It must be allowed to expire or logout.
+    
+    The dotenv, jsonwebtoken and cookie-parser packages are installed.
+    The Access and Refresh Tokens are generated using "require('crypto').randomBytes(64).toString('hex')".
+    They are generated inside NodeJS on the command line.
+    
+    The Auth Controller finds the user by matching the username.
+    It then matches the password.
+    On a successful username and password match, it creates the access token and the refresh token.
+    The Access Token is sent via JSON and stored only in memory.
+    The refresh token is sent as an HTTP-Only Cookie and is stored locally.    
+    
+    The Refresh Token Controller gets the refresh token from a cookie in memory
+    It checks for the current user in the refresh token.
+    The refresh token is verified with the refresh token secret in dotenv.
+    After this, a new access token is issued.
+    The access token is sent via JSON.
+    
+    These two controllers have their respective routes.
+    The Auth Controller has a post route.
+    The Refresh Token Controller has a get route.
+
+    The verifyJWT gets the authorization header from the HTTP Headers.
+    It then gets the bearer token from the authorization header.
+    After that, it gets the access token from the bearer token.
+    It then verifies the access token with the access token secret from dotenv.
+    The verifyJWT can either be passed into individual routes to protect them OR,
+    It can be included as app.use(verifyJWT) in the "server.js" file above all the routes that it is meant to protect.
+    
+    The Logout COntroller is used to delete the JWT.
+    If the user is not found, then the entire JWT is immediately deleted by deleting the cookie containing it.
+    If the user is found, then the refresh token for that user is made blank.
+    This is followed by this detail of that user being updated in the users database.
+    Then the entire JWT is deleted by deleting the cookie containing it.
+    
+    ===========TESTING AUTH===========
+    1) First use the "auth" API to log in.
+    2) Use the granted Access Token and put it in the BEARER field of the "AUTH" section of Thunder Client.
+    3) Repeat Step 2 for testing every API.
+    ===========TESTING AUTH===========
+    
+    Authentication is the process of verifying who somebody is.
+    Authorisation is the process of verifying what resources someone has access to.  
+=========================24-10-2024=========================
+
+
